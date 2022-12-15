@@ -1,14 +1,9 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
-import {Installer} from './installer'
 import {Report} from './report'
 
 async function run(): Promise<void> {
   try {
-    // const installer = new Installer()
-    // const version: string = core.getInput('version') ?? ''
-    // await installer.install(version)
-
     const solutionPath: string = core.getInput('solutionPath')
     const outputPath = 'result.xml'
 
@@ -18,6 +13,8 @@ async function run(): Promise<void> {
     if (include) {
       command += ` --include=${include.trim().replace(/[\r\n]+/g, ';')}`
     }
+    command += ` --properties:UNITY_EDITOR`
+    command += ` --properties:UNITASK_DOTWEEN_SUPPORT`
 
     const exclude = core.getInput('exclude') ?? ''
     if (exclude !== '') {

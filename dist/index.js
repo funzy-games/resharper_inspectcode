@@ -71,9 +71,6 @@ function run() {
     var _a, _b, _c, _d;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            // const installer = new Installer()
-            // const version: string = core.getInput('version') ?? ''
-            // await installer.install(version)
             const solutionPath = core.getInput('solutionPath');
             const outputPath = 'result.xml';
             let command = `dotnet jb inspectcode --build --output=${outputPath} --severity=HINT --absolute-paths ${solutionPath}`;
@@ -81,6 +78,8 @@ function run() {
             if (include) {
                 command += ` --include=${include.trim().replace(/[\r\n]+/g, ';')}`;
             }
+            command += ` --properties:UNITY_EDITOR`;
+            command += ` --properties:UNITASK_DOTWEEN_SUPPORT`;
             const exclude = (_a = core.getInput('exclude')) !== null && _a !== void 0 ? _a : '';
             if (exclude !== '') {
                 command += ` --exclude=${exclude}`;
