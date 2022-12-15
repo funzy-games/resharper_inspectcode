@@ -1,64 +1,6 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 1480:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Installer = void 0;
-const exec = __importStar(__nccwpck_require__(1514));
-class Installer {
-    //TODO check dotnet sdk in constructor
-    install(version) {
-        return __awaiter(this, void 0, void 0, function* () {
-            // The 'update' command will install JetBrains.ReSharper.GlobalTools if it is not already installed.
-            let command = `dotnet tool update --global JetBrains.ReSharper.GlobalTools`;
-            if (version !== '') {
-                command += ` --version ${version}`;
-            }
-            return exec.exec(command);
-        });
-    }
-}
-exports.Installer = Installer;
-
-
-/***/ }),
-
 /***/ 6018:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -124,27 +66,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const exec = __importStar(__nccwpck_require__(1514));
-const installer_1 = __nccwpck_require__(1480);
 const report_1 = __nccwpck_require__(8269);
 function run() {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const installer = new installer_1.Installer();
-            const version = (_a = core.getInput('version')) !== null && _a !== void 0 ? _a : '';
-            yield installer.install(version);
+            // const installer = new Installer()
+            // const version: string = core.getInput('version') ?? ''
+            // await installer.install(version)
             const solutionPath = core.getInput('solutionPath');
             const outputPath = 'result.xml';
-            let command = `jb inspectcode --build --output=${outputPath} --severity=HINT --absolute-paths ${solutionPath}`;
+            let command = `dotnet jb inspectcode --build --output=${outputPath} --severity=HINT --absolute-paths ${solutionPath}`;
             const include = core.getInput('include');
             if (include) {
                 command += ` --include=${include.trim().replace(/[\r\n]+/g, ';')}`;
             }
-            const exclude = (_b = core.getInput('exclude')) !== null && _b !== void 0 ? _b : '';
+            const exclude = (_a = core.getInput('exclude')) !== null && _a !== void 0 ? _a : '';
             if (exclude !== '') {
                 command += ` --exclude=${exclude}`;
             }
-            const solutionWideAnalysis = (_c = core.getInput('solutionWideAnalysis')) !== null && _c !== void 0 ? _c : '';
+            const solutionWideAnalysis = (_b = core.getInput('solutionWideAnalysis')) !== null && _b !== void 0 ? _b : '';
             if (solutionWideAnalysis !== '') {
                 command += ` --${solutionWideAnalysis.toLowerCase() !== 'true' ? 'no-' : ''}swea`;
             }
@@ -154,11 +95,11 @@ function run() {
                 process.chdir(workingDir);
             }
             yield exec.exec(command);
-            const ignoreIssueType = (_d = core.getInput('ignoreIssueType')) !== null && _d !== void 0 ? _d : '';
+            const ignoreIssueType = (_c = core.getInput('ignoreIssueType')) !== null && _c !== void 0 ? _c : '';
             const report = new report_1.Report(outputPath, ignoreIssueType);
             report.output();
             const failOnIssue = core.getInput('failOnIssue');
-            const minimumSeverity = (_e = core.getInput('minimumSeverity')) !== null && _e !== void 0 ? _e : 'notice';
+            const minimumSeverity = (_d = core.getInput('minimumSeverity')) !== null && _d !== void 0 ? _d : 'notice';
             if (failOnIssue !== '1') {
                 return;
             }

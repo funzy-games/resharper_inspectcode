@@ -5,14 +5,14 @@ import {Report} from './report'
 
 async function run(): Promise<void> {
   try {
-    const installer = new Installer()
-    const version: string = core.getInput('version') ?? ''
-    await installer.install(version)
+    // const installer = new Installer()
+    // const version: string = core.getInput('version') ?? ''
+    // await installer.install(version)
 
     const solutionPath: string = core.getInput('solutionPath')
     const outputPath = 'result.xml'
 
-    let command = `jb inspectcode --build --output=${outputPath} --severity=HINT --absolute-paths ${solutionPath}`
+    let command = `dotnet jb inspectcode --build --output=${outputPath} --severity=HINT --absolute-paths ${solutionPath}`
 
     const include: string = core.getInput('include')
     if (include) {
